@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from dex import *
+from dex.dexinfo import DexInfo
 from test_modify import *
 
 dex_path = './data/classes.dex'
@@ -13,7 +13,7 @@ dex = DexInfo(dex_path)
 print( '-*-' * 30)
 print( 'modify string {')
 
-modifyString(dex.getContext())
+modifyString(dex)
 
 print( '}')
 print( '-*-' * 30)

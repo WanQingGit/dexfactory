@@ -171,6 +171,9 @@ class BaseSection(BytesObject):
     section的基类
     """
 
+    def check_head(self, header: 'common_type.HeaderItem'):
+        pass
+
     def __init__(self, context, bytes, item_count, off):
         """
         初始化
@@ -181,12 +184,10 @@ class BaseSection(BytesObject):
         """
         super(BaseSection, self).__init__(bytes, off)
 
-        # 基础变量
-        # self.section_name = type_desc_map[section_type]
         self.item_count = item_count
 
-        # 关联context
-        self.context = context
+        from common_context import Context
+        self.context: Context = context
         self.context.setSection(self.section_type, self)
 
         # 解码
@@ -197,9 +198,7 @@ class BaseSection(BytesObject):
         raise NotImplemented
 
     def decode(self):
-        """
-        解码字节数组
-        """
+        self.check_head(self.context.header)
         bytes = self.getOrginalBytes()
 
         self.item_list = []

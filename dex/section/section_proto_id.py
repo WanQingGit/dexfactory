@@ -13,6 +13,9 @@ class ProtoIdListSection(BaseSection):
         from common_type import TYPE_PROTO_ID_ITEM
         return TYPE_PROTO_ID_ITEM
 
+    def check_head(self, header: 'HeaderItem'):
+        assert self.offset == header.proto_ids_off
+        assert self.item_count == header.proto_ids_size
 
     def getItemDesc(self, index):
         """

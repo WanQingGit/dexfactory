@@ -8,7 +8,7 @@ from dex.section.common_type import *
 from odex.section.tool import createBytes
 
 
-class DexInfo(object):
+class DexInfo(Context):
     """
     dex信息
     """
@@ -21,6 +21,7 @@ class DexInfo(object):
         self.dex_bytes:  dex的字节数组
         self.header:     头部信息的字节数组
         """
+        super().__init__()
         # 记录文件路径
         self.dex_path = dex_path
 
@@ -29,9 +30,6 @@ class DexInfo(object):
             self.dex_bytes = np.fromfile(dex_path, dtype=np.ubyte)
         else:
             self.dex_bytes = dex_bytes
-
-        # context
-        self.context = Context()
 
         # 解码section列表
         self.decode()
@@ -42,10 +40,11 @@ class DexInfo(object):
         解码所有的section列表
         """
         # 1. 获取头信息
-        header = HeaderSection(self.context, self.dex_bytes, 1, 0).getItem(0)
+        header = HeaderSection(self, self.dex_bytes, 1, 0).getItem(0)
+        self.header = header
 
         # 2. 获取map列表
-        map_item_list = MapItemListSection(self.context, self.dex_bytes, 1, header.map_off)
+        map_item_list = MapItemListSection(self, self.dex_bytes, 1, header.map_off)
 
         # 3. 解析所有的section字段
         for item in map_item_list.getItemDataList():
@@ -54,7 +53,7 @@ class DexInfo(object):
                 continue
             section_item_size = item.getSectionItemSize()
             section_off = item.getSectionOff()
-            section_type.section(self.context, self.dex_bytes, section_item_size, section_off)
+            section_type.section(self, self.dex_bytes, section_item_size, section_off)
 
         # 4. 转换[off ---> id]
         self.convertOffToIdForAllSections()
@@ -62,9 +61,7 @@ class DexInfo(object):
         # 5. 转换[id ---> item]
         self.convertIdToItemForAllSections()
 
-        # 6. 记录头部信息
-        # self.header_section = self.context.getSection(TYPE_HEADER_ITEM)
-        self.header = header  # self.header_section.getItem(0)
+        # self.header_section.getItem(0)
 
     def encode(self):
         """
@@ -93,7 +90,7 @@ class DexInfo(object):
         """
         编码所有的section列表
         """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
 
         # 记录原有的hex信息
         src_hex_list = []
@@ -104,7 +101,7 @@ class DexInfo(object):
         for section in section_list:
             section.encode()
 
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
 
         # 记录原有的hex信息
         dst_hex_list = []
@@ -115,10 +112,10 @@ class DexInfo(object):
         """
         更新所有section的偏移和大小
         """
-        map_list_section = self.context.getSection(TYPE_MAP_LIST)
+        map_list_section = self.getSection(TYPE_MAP_LIST)
         header = self.header
 
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
 
         section_size_off_map = {}
         # for section_type,_ in type_list.items():
@@ -175,7 +172,7 @@ class DexInfo(object):
         section_item_size, class_def_section_off = section_size_off_map[TYPE_CLASS_DEF_ITEM]
         header.setClassDefInfo(section_item_size, class_def_section_off)
 
-        class_def_section = self.context.getSection(TYPE_CLASS_DEF_ITEM)
+        class_def_section = self.getSection(TYPE_CLASS_DEF_ITEM)
         data_area_off = class_def_section_off + class_def_section.getBytesSize()
         data_area_size = file_size - data_area_off
         header.setDataInfo(data_area_size, data_area_off)
@@ -186,7 +183,7 @@ class DexInfo(object):
         """
         拷贝所有的section
         """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         header = self.header
 
         # 重新调整字节数组大小
@@ -210,48 +207,43 @@ class DexInfo(object):
         """
         打印所有的section列表
         """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             if section:
                 print(section.tostring())
 
     def printSection(self, section_type):
         """ 打印指定类型的section """
-        section = self.context.getSection(section_type)
+        section = self.getSection(section_type)
         if section:
             print(section.tostring())
 
     def convertOffToIdForAllSections(self):
         """ 转换文件偏移量到相关的id """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             section.convertOffToId()
 
     def convertIdToOffForAllSections(self):
         """ 转换id到相关的文件偏移量 """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             section.convertIdToOff()
 
     def convertIdToItemForAllSections(self):
         """ 转换id到item对象 """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             section.convertIdToItem()
 
     def convertItemToIdForAllSections(self):
         """ 转换item对象到id """
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             section.convertItemToId()
         # if section.section_type == TYPE_PROTO_ID_ITEM:
         # 	print section.tostring()
 
-    def getContext(self):
-        """
-        获取上下文信息
-        """
-        return self.context
 
     def save(self, dex_path=None):
         """
@@ -287,7 +279,7 @@ class DexInfo(object):
 
     def tostring(self):
         string = ''
-        section_list = self.context.getSectionList()
+        section_list = self.getSectionList()
         for section in section_list:
             if section:
                 string += section.tostring()

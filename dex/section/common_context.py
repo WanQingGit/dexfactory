@@ -8,10 +8,12 @@ class Context(object):
     上下文信息，记录所有的section列表信息
     """
 
+    header: HeaderItem = None
+    string_list = None
+    proto_list = None
+    type_list = None
+
     def __init__(self):
-        self.string_list = None
-        self.type_list = None
-        self.proto_list = None
 
         self.section_map = {}
         for _, section_type in type_desc_map.items():

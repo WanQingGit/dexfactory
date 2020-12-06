@@ -13,6 +13,9 @@ class FieldIdListSection(BaseSection):
         from common_type import TYPE_FIELD_ID_ITEM
         return TYPE_FIELD_ID_ITEM
 
+    def check_head(self, header: 'common_type.HeaderItem'):
+        assert self.item_count == header.field_ids_size
+        assert self.offset == header.field_ids_off
 
     def getItemDesc(self, index):
         """

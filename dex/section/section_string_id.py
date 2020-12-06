@@ -13,19 +13,13 @@ class StringIdListSection(BaseSection):
         from common_type import TYPE_STRING_ID_ITEM
         return TYPE_STRING_ID_ITEM
 
+    def check_head(self, header: 'common_type.HeaderItem'):
+        self.item_count = self.context.header.string_ids_size
+        self.offset = self.context.header.string_ids_off
+
     @property
     def bytes_size(self):
-        return self.item_size*0x4
-
-    # def __init__(self, context, bytes, size, off):
-    #     """
-    #     初始化
-    #     context:    上下文信息
-    #     bytes:      原始字节数组
-    #     size:       项列表的总个数
-    #     off:        字节数组偏移
-    #     """
-    #     super(StringIdListSection, self).__init__(context, bytes[off:off + size * 0x04], size)
+        return self.item_size * 0x4
 
     def cmpItem(self, item1, item2):
         if item1.string_data_id < item2.string_data_id:

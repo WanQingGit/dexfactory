@@ -3,6 +3,7 @@
 import struct
 
 from base import *
+from common_tool import convertIntToBytes
 
 
 class ClassDefItem(BaseItem):
@@ -25,22 +26,12 @@ class ClassDefItem(BaseItem):
     static_value_id = -1
     static_value_item = None
 
+    cls_name = None
 
-    def decode(self, bytes,offset=0):
-
+    def decode(self, bytes, offset=0):
         self.class_id, self.access_flags, self.super_class_id, self.interface_off, \
         self.source_file_id, self.annotation_off, self.class_data_off, self.static_value_off \
             = self.Struct.unpack(bytes[offset:offset + self.item_size])
-
-        # self.class_id = convertBytesToInt(bytes[0x00:0x04])
-        # self.access_flags = convertBytesToInt(bytes[0x04:0x08])
-        # self.super_class_id = convertBytesToInt(bytes[0x08:0x0c])
-        # self.interface_off = convertBytesToInt(bytes[0x0c:0x10])
-        # self.source_file_id = convertBytesToInt(bytes[0x10:0x14])
-        # self.annotation_off = convertBytesToInt(bytes[0x14:0x18])
-        # self.class_data_off = convertBytesToInt(bytes[0x18:0x1c])
-        # self.static_value_off = convertBytesToInt(bytes[0x1c:0x20])
-
 
     def encode(self):
         """
@@ -148,6 +139,10 @@ class ClassDefItem(BaseItem):
         获取静态数据偏移量
         """
         return self.static_value_off
+
+    def setClsName(self, cls_name):
+        self.cls_name = cls_name
+        # if self.cls_name is None:
 
     def tostring(self):
         """

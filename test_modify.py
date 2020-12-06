@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
+from common_type import TYPE_STRING_ID_ITEM, TYPE_STRING_DATA_ITEM
 
-from dex import *
 
 def cmpStringItem(item1, item2):
 	if item1.string_data < item2.string_data:

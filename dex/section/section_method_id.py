@@ -13,6 +13,9 @@ class MethodIdListSection(BaseSection):
         from common_type import TYPE_METHOD_ID_ITEM
         return TYPE_METHOD_ID_ITEM
 
+    def check_head(self, header: 'common_type.HeaderItem'):
+        assert self.offset == header.method_ids_off
+        assert self.item_count == header.method_ids_size
 
     def getItemDesc(self, index):
         """

@@ -7,11 +7,11 @@ class ClassDataListSection(BaseSection):
     """
     section: class data列表
     """
+
     @property
     def section_type(self):
         from common_type import TYPE_CLASS_DATA_ITEM
         return TYPE_CLASS_DATA_ITEM
-
 
     def trimBytesSize(self, bytes_size):
         """ 重新调整字节数组大小 """
@@ -43,6 +43,7 @@ class ClassDataListSection(BaseSection):
         if len(static_field_list) > 0:
             string += '    [\n'
             for item in static_field_list:
+                from common_type import TYPE_FIELD_ID_ITEM
                 string += ' ' * 8 + self.getContextDesc(TYPE_FIELD_ID_ITEM, item.getFieldId()) + '\n'
             string += '    ]\n'
 
@@ -57,6 +58,7 @@ class ClassDataListSection(BaseSection):
         if len(direct_method_list) > 0:
             string += '    [\n'
             for item in direct_method_list:
+                from common_type import TYPE_METHOD_ID_ITEM
                 string += ' ' * 8 + self.getContextDesc(TYPE_METHOD_ID_ITEM, item.getMethodId()) + '\n'
             string += '    ]\n'
 

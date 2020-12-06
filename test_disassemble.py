@@ -1,12 +1,17 @@
 # -- coding: utf-8 --
 
-from dex.dexinfo import DexInfo, TYPE_CODE_ITEM
+from dex.dexinfo import DexInfo, TYPE_CODE_ITEM, TYPE_CLASS_DEF_ITEM, ClassDefListSection, ClassDefItem
 from disassemble.insns import Insns
 from odex.section.tool import convertBytesToHexStr
 
 dex_path = './data/classes.dex'
-dex = DexInfo(dex_path)
-context = dex.context
+context = DexInfo(dex_path)
+
+class_item_section: ClassDefListSection = context.getSection(TYPE_CLASS_DEF_ITEM)
+for i in range(class_item_section.item_count):
+    class_item_section.getItemDesc(i)
+    class_item: ClassDefItem = class_item_section.getItem(i)
+    # class_item.get
 
 ######################################################################
 """
