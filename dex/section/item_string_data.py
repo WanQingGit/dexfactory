@@ -7,7 +7,7 @@ class StringDataItem(BaseItem):
     """
     section子结构: 字符串项
     """
-    byte_size = 0x02
+    item_size = 0x02
 
     def __init__(self, bytes):
         """

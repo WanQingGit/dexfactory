@@ -7,7 +7,7 @@ class TypeIdItem(BaseItem):
     """
     section子结构: 类型ID项
     """
-    byte_size = 0x04
+    item_size = 0x04
 
 
     def __init__(self, bytes):

@@ -8,7 +8,7 @@ class ClassDefItem(BaseItem):
     """
     section子结构: 类定义
     """
-    byte_size = 0x20
+    item_size = 0x20
 
     Struct = struct.Struct('<LLLLLLLL')
 
@@ -41,7 +41,7 @@ class ClassDefItem(BaseItem):
 
         self.class_id, self.access_flags, self.super_class_id, self.interface_off, \
         self.source_file_id, self.annotation_off, self.class_data_off, self.static_value_off \
-            = self.Struct.unpack(bytes[offset:offset + self.byte_size])
+            = self.Struct.unpack(bytes[offset:offset + self.item_size])
 
         # self.class_id = convertBytesToInt(bytes[0x00:0x04])
         # self.access_flags = convertBytesToInt(bytes[0x04:0x08])

@@ -7,7 +7,7 @@ class ProtoIdItem(BaseItem):
     """
     字符串项
     """
-    byte_size = 0x0c
+    item_size = 0x0c
 
     def __init__(self, bytes):
         """

@@ -1,26 +1,26 @@
 # -- coding: utf-8 --
-from item_base import BaseItem
+from data_base import BytesObject
 from odex.section.tool import createBytes
 
 
-class BaseSection(BaseItem):
+class BaseSection(BytesObject):
     """
     section的基类
     """
 
-    def __init__(self, context, bytes, item_size):
+    def __init__(self, context, bytes, item_count, off):
         """
         初始化
         context:         上下文信息
         section_type:    section的类型
         bytes:           原始字节数组
-        item_size:       子项个数
+        item_count:       子项个数
         """
-        super(BaseSection, self).__init__(bytes)
+        super(BaseSection, self).__init__(bytes, off)
 
         # 基础变量
         # self.section_name = type_desc_map[section_type]
-        self.item_size = item_size
+        self.item_count = item_count
 
         # 关联context
         self.context = context
@@ -37,17 +37,18 @@ class BaseSection(BaseItem):
         """
         解码字节数组
         """
-        bytes = self.getBytes()
+        bytes = self.getOrginalBytes()
 
         self.item_list = []
 
-        off = 0
-        for i in range(self.item_size):
+        off = self.offset
+        for i in range(self.item_count):
             # 解码子项
-            item = self.createItem()
-            item.setBytes(bytes[off:])
-            item.decode()
-            item_bytes_size = item.getBytesSize()
+            item = self.section_type.baseitem()
+            # item = self.createItem()
+            # item.setBytes(bytes[off:])
+            item_bytes_size = item.decode_bytes(bytes, off)
+            # item_bytes_size = item.getBytesSize()
 
             # 添加子项
             self.item_list.append(item)
@@ -57,7 +58,8 @@ class BaseSection(BaseItem):
 
         # 重新调整字节数组大小
         trim_bytes_size = self.trimBytesSize(off)
-        self.setBytes(bytes[0x00:trim_bytes_size])
+        if trim_bytes_size != self.item_size:
+            self.setBytes(bytes[0x00:trim_bytes_size])
 
     def encode(self):
         """
@@ -72,7 +74,7 @@ class BaseSection(BaseItem):
         if self.getBytesSize() != new_size:
             self.setBytes(createBytes(new_size))
 
-        self.item_size = len(self.item_list)
+        self.item_count = len(self.item_list)
 
         # 编码
         bytes = self.getBytes()
@@ -125,14 +127,14 @@ class BaseSection(BaseItem):
 
     def getIdByOff(self, off):
         cur_off = 0
-        for i in range(self.item_size):
+        for i in range(self.item_count):
             if cur_off == off:
                 return i
             cur_off += self.item_list[i].getBytesSize()
         return -1
 
     def getOffById(self, id):
-        if id >= self.item_size:
+        if id >= self.item_count:
             return -1
 
         cur_off = 0
@@ -194,14 +196,14 @@ class BaseSection(BaseItem):
         """
         获取列表长度
         """
-        return self.item_size
+        return self.item_count
 
     def getItem(self, index):
         """
         获取子项
         index:    索引
         """
-        if index < self.item_size:
+        if index < self.item_count:
             return self.item_list[index]
 
         return None
@@ -211,7 +213,7 @@ class BaseSection(BaseItem):
         获取子项的字符串描述
         index: 索引
         """
-        if index < self.item_size:
+        if index < self.item_count:
             item = self.item_list[index]
             return item.tostring()
 
@@ -245,8 +247,8 @@ class BaseSection(BaseItem):
         """
         string = '-*-' * 30 + '\n'
 
-        string += '%s ---> [%d]\n' % (self.section_type.strval, self.item_size)
-        for i in range(self.item_size):
+        string += '%s ---> [%d]\n' % (self.section_type.strval, self.item_count)
+        for i in range(self.item_count):
             # 使用item描述
             string += '%.4d: %s\n' % (i, self.getItemDesc(i))
         # 使用item自身的tostring()

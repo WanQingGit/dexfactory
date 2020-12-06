@@ -7,7 +7,7 @@ class AnnotationSefRefListItemData(BaseData):
     """
     注解引用列表中的子类型结构数据
     """
-    byte_size = 0x04
+    item_size = 0x04
 
 
     def __init__(self, bytes):

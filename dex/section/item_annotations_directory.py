@@ -7,7 +7,7 @@ class AnnotationsDirectoryItem(BaseItem):
     """
     section子结构: annotations_directory_item
     """
-    byte_size = 0x4
+    item_size = 0x4
 
     def __init__(self, bytes):
         """

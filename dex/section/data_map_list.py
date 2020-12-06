@@ -8,7 +8,7 @@ class MapListItemData(BaseData):
     """
     MapListItem中的数据项
     """
-    byte_size = 0x0c
+    item_size = 0x0c
 
     def __init__(self, bytes):
         """

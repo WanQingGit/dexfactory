@@ -7,7 +7,7 @@ class ClassDataItemFieldData(BaseData):
     """
     类数据中的field结构
     """
-    byte_size = 0x02
+    item_size = 0x02
 
     def __init__(self, bytes):
         """
@@ -109,7 +109,7 @@ class ClassDataItemMethodData(BaseData):
     """
     类数据中的Method结构
     """
-    byte_size = 0x03
+    item_size = 0x03
 
     def __init__(self, bytes):
         """

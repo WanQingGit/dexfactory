@@ -8,7 +8,7 @@ class TypeListItemData(BaseData):
     """
     类型列表中的子类型结构数据
     """
-    byte_size = 0x02
+    item_size = 0x02
 
     def __init__(self, bytes):
         """

@@ -13,17 +13,6 @@ class TypeListSection(BaseSection):
         from common_type import TYPE_TYPE_LIST
         return TYPE_TYPE_LIST
 
-    def __init__(self, context, bytes, size, off):
-        """
-        初始化
-        context:    上下文信息
-        bytes:      原始字节数组
-        size:       项列表的总个数
-        off:        字节数组偏移
-        """
-
-        super(TypeListSection, self).__init__(context, bytes[off:], size)
-
     def decode(self):
         """
         解码字节数组:  比较特殊的section，每项要求四字节对齐，但是最后一项不需要

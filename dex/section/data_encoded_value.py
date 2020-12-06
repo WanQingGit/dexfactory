@@ -39,7 +39,7 @@ class EncodedValueData(BaseData):
     """
     data: encoded_value
     """
-    byte_size = 0x01
+    item_size = 0x01
 
     def __init__(self, bytes):
         """

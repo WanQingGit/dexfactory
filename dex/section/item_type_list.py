@@ -7,7 +7,7 @@ class TypeListItem(BaseItem):
     """
     section子结构: 类型列表项
     """
-    byte_size = 0x04
+    item_size = 0x04
 
     def __init__(self, bytes):
         """

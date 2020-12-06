@@ -5,24 +5,29 @@ import numpy as np
 
 
 class BytesObject(object):
-    byte_size = None
+    item_size = None
+    bytes = None
 
     @classmethod
     def create(cls):
         """
         创建项
         """
-        return cls(createBytes(cls.byte_size))
+        if cls.item_size:
+            return cls(createBytes(cls.item_size))
+        return cls()
 
     """
     字节数组对象，该对象包含一段字节数组，主要用于字节数组的解析和压缩
     """
 
-    def __init__(self, bytes):
+    def __init__(self, bytes, off=0):
         """
         bytes: 原始字节数组
         """
-        self.setBytes(np.array(bytes).astype(np.ubyte))
+        self.original_bytes = bytes
+        self.offset = off
+        # self.setBytes(np.array(bytes).astype(np.ubyte))
 
     def copyFrom(self, bytes):
         """
@@ -38,11 +43,19 @@ class BytesObject(object):
         self.bytes = bytes
         self.bytes_size = len(bytes)
 
+    def getOrginalBytes(self):
+        return self.original_bytes
+
     def getBytes(self):
         """
         返回字节数组
         """
-        return self.bytes
+        if self.bytes is not None:
+            return self.bytes
+        if self.item_size:
+            self.setBytes(createBytes(self.item_size))
+            return self.bytes
+        raise Exception('can not create bytes without size info')
 
     def getBytesSize(self):
         """

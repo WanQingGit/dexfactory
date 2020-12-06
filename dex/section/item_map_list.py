@@ -8,7 +8,7 @@ class MapListItem(BaseItem):
     """
     section子结构: 映射项信息
     """
-    byte_size = 0x04
+    item_size = 0x04
 
     def __init__(self, bytes):
         """

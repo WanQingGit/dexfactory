@@ -8,7 +8,7 @@ class CodeItem(BaseItem):
     """
     section子结构: code_item
     """
-    byte_size = 0x10
+    item_size = 0x10
 
     Struct = struct.Struct('<HHHHLL')
 

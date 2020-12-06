@@ -13,16 +13,6 @@ class MethodIdListSection(BaseSection):
         from common_type import TYPE_METHOD_ID_ITEM
         return TYPE_METHOD_ID_ITEM
 
-    def __init__(self, context, bytes, size, off):
-        """
-        初始化
-        context:    上下文信息
-        bytes:      原始字节数组
-        size:       项列表的总个数
-        off:        字节数组偏移
-        """
-
-        super(MethodIdListSection, self).__init__(context, bytes[off:], size)
 
     def getItemDesc(self, index):
         """

@@ -13,16 +13,6 @@ class ClassDefListSection(BaseSection):
         from common_type import TYPE_CLASS_DEF_ITEM
         return TYPE_CLASS_DEF_ITEM
 
-    def __init__(self, context, bytes, size, off):
-        """
-        初始化
-        context:    上下文信息
-        bytes:      原始字节数组
-        size:       项列表的总个数
-        off:        字节数组偏移
-        """
-
-        super(ClassDefListSection, self).__init__(context, bytes[off:], size)
 
     def getItemDesc(self, index):
         """

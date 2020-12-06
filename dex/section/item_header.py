@@ -8,23 +8,13 @@ class HeaderItem(BaseItem):
     """
     section子结构: 头部信息项
     """
-    byte_size = 0x70
+    item_size = 0x70
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(HeaderItem, self).__init__(bytes[0x00:0x70])
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, offset):
         """
         从字节数组中解析变量
         """
-        bytes = self.getBytes()
-
+        bytes = bytes[offset:offset + self.item_size]
         self.magic = bytes[0x00:0x08]
         self.checksum = bytes[0x08:0x0C]
         self.signature = bytes[0x0C:0x20]

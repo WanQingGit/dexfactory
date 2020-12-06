@@ -7,7 +7,7 @@ class AnnotationSetItemItem(BaseItem):
     """
     section子结构: 注解列表
     """
-    byte_size = 0x04
+    item_size = 0x04
 
     def __init__(self, bytes):
         """

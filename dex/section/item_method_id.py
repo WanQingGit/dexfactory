@@ -7,7 +7,7 @@ class MethodIdItem(BaseItem):
     """
     属性项
     """
-    byte_size = 0x08
+    item_size = 0x08
 
     Struct = struct.Struct('<HHL')
 

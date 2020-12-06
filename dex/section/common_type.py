@@ -45,7 +45,7 @@ type_desc_map = {}
 
 
 class SectionType(object):
-    def __init__(self, val, strval, baseitem, section):
+    def __init__(self, val, strval, baseitem:BaseItem, section):
         self.val = val
         self.strval = strval
         self.baseitem = baseitem

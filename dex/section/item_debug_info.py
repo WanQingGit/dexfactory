@@ -7,7 +7,7 @@ class DebugInfoItem(BaseItem):
     """
     section子结构: code_item
     """
-    byte_size = 0x10
+    item_size = 0x10
 
     def __init__(self, bytes):
         """
