@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 from common_tool import convertUleb128BytesToInt
-from data_base import *
+from base import *
 
 """
 定义编码类型

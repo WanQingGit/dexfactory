@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 
 
 class ProtoIdItem(BaseItem):
@@ -9,14 +9,6 @@ class ProtoIdItem(BaseItem):
     """
     item_size = 0x0c
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组
-        """
-        super(ProtoIdItem, self).__init__(bytes[0x00:0x0c])
-
-        self.decode()
 
     def decode(self):
         """

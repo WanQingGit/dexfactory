@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 import struct
 
 
@@ -12,14 +12,6 @@ class CodeItem(BaseItem):
 
     Struct = struct.Struct('<HHHHLL')
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组
-        """
-        super(CodeItem, self).__init__(bytes)
-
-        self.decode()
 
     def decode(self):
         """

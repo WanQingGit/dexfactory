@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 from data_annotations_directory import MethodAnnotationData, FieldAnnotationData, ParameterAnnotationData
-from item_base import *
+from base import *
 
 
 class AnnotationsDirectoryItem(BaseItem):
@@ -9,14 +9,6 @@ class AnnotationsDirectoryItem(BaseItem):
     """
     item_size = 0x4
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(AnnotationsDirectoryItem, self).__init__(bytes)
-
-        self.decode()
 
     def decode(self):
         """

@@ -1,7 +1,8 @@
 # -- coding: utf-8 --
 
-from item_base import *
 import struct
+
+from base import *
 
 
 class ClassDefItem(BaseItem):
@@ -24,14 +25,6 @@ class ClassDefItem(BaseItem):
     static_value_id = -1
     static_value_item = None
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组
-        """
-        super(ClassDefItem, self).__init__(bytes[0x00:0x20])
-
-        self.decode()
 
     def decode(self, offset=0):
         """

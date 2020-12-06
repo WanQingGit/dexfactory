@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 
 
 class DebugInfoItem(BaseItem):
@@ -9,14 +9,6 @@ class DebugInfoItem(BaseItem):
     """
     item_size = 0x10
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组
-        """
-        super(DebugInfoItem, self).__init__(bytes)
-
-        self.decode()
 
     def decode(self):
         """

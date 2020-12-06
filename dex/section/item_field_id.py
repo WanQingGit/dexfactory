@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 
 
 class FieldIdItem(BaseItem):
@@ -10,14 +10,6 @@ class FieldIdItem(BaseItem):
     item_size = 0x08
     Struct = struct.Struct('<HHL')
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组
-        """
-        super(FieldIdItem, self).__init__(bytes[0x00:0x08])
-
-        self.decode()
 
     def decode(self, offset=0):
         """

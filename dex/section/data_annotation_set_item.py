@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from data_base import *
+from base import *
 
 from odex.section.tool import *
 

@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 
 
 class StringDataItem(BaseItem):
@@ -9,14 +9,10 @@ class StringDataItem(BaseItem):
     """
     item_size = 0x02
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:  原始字节数组，结构为[size, string, 0]，所以大小为1 + size + 1 = size + 2
-        """
-        super(StringDataItem, self).__init__(bytes)
-
-        self.decode()
+    """
+    初始化
+    bytes:  原始字节数组，结构为[size, string, 0]，所以大小为1 + size + 1 = size + 2
+    """
 
     def decode(self):
         """

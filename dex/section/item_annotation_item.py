@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 
 """
 annotation_item中的visibility的描述映射
@@ -20,14 +20,6 @@ class AnnotationItemItem(BaseItem):
     """
     item_size = 0x04
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(AnnotationItemItem, self).__init__(bytes)
-
-        self.decode()
 
     def decode(self):
         """

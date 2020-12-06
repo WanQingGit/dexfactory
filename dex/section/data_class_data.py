@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 from common_tool import *
-from data_base import *
+from base import *
 
 
 class ClassDataItemFieldData(BaseData):

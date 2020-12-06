@@ -1,5 +1,5 @@
 # -- coding: utf-8 --
-from data_base import BytesObject
+from base import BytesObject
 from odex.section.tool import createBytes
 
 
@@ -57,9 +57,12 @@ class BaseSection(BytesObject):
             off += item_bytes_size
 
         # 重新调整字节数组大小
-        trim_bytes_size = self.trimBytesSize(off)
+        trim_bytes_size = off - self.offset
         if trim_bytes_size != self.item_size:
-            self.setBytes(bytes[0x00:trim_bytes_size])
+            assert self.item_size is None
+            self.item_size = trim_bytes_size
+
+            # self.setBytes(bytes[0x00:trim_bytes_size])
 
     def encode(self):
         """

@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from item_base import *
+from base import *
 from odex.section.tool import convertBytesToInt, convertIntToBytes
 
 
@@ -10,27 +10,16 @@ class StringIdItem(BaseItem):
     """
     item_size = 0x04
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(StringIdItem, self).__init__(bytes[0x00:0x04])
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, off):
         """
         从字节数组中解析变量
         """
-        bytes = self.getBytes()
-
-        self.string_data_off = convertBytesToInt(bytes[0x00:0x04])
+        self.string_data_off = convertBytesToInt(bytes[off:off + 0x04])
         self.string_data_id = -1
         self.string_data_item = None
 
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:0x04])
+        # self.setBytes(bytes[0x00:0x04])
 
     def encode(self):
         """

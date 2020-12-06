@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from data_base import *
+from base import *
 from odex.section.tool import *
 
 
@@ -10,21 +10,11 @@ class MapListItemData(BaseData):
     """
     item_size = 0x0c
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(MapListItemData, self).__init__(bytes[0x00:0x0c])
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, offset):
         """
         解码字节数组
         """
-        bytes = self.bytes
-
+        bytes = bytes[offset:offset + self.item_size]
         type = convertBytesToShort(bytes[0x00:0x02])
         from common_type import type_desc_map
         self.type = type_desc_map[type]
@@ -36,7 +26,7 @@ class MapListItemData(BaseData):
         """
         将变量重新写入到字节数组中
         """
-        bytes = self.bytes
+        bytes = self.getBytes()
 
         bytes[0x00:0x02] = convertShortToBytes(self.type)
         bytes[0x02:0x04] = convertShortToBytes(self.unused)
