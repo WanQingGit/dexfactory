@@ -1,38 +1,39 @@
 # -- coding: utf-8 --
 
 from base import *
+from common_tool import convertIntToBytes
+from data_annotation_set_item import AnnotationSetItemItemOffData
 
 
-class AnnotationSetItemItem(BaseItem):
+class AnnotationSetItemItem(BaseSectionItem):
     """
     section子结构: 注解列表
     """
     item_size = 0x04
+    ItemData = AnnotationSetItemItemOffData
 
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.getBytes()
-
-        self.item_size = convertBytesToInt(bytes[0x00:0x04])
-        self.item_list = []
-
-        off = 0x04
-        for i in range(self.item_size):
-            # 解码子项数据
-            from data_annotation_set_item import AnnotationSetItemItemOffData
-            item = AnnotationSetItemItemOffData(bytes[off:off + 0x04])
-
-            # 添加数据列表
-            self.item_list.append(item)
-
-            # 偏移量增加
-            off += 0x04
-
+    # def decode(self, bytes, off):
+    #     """
+    #     解码字节数组
+    #     """
+    #
+    #     self.item_size = convertBytesToInt(bytes[off:off + 0x04])
+    #     self.item_list = []
+    #
+    #     off += 0x04
+    #     for i in range(self.item_size):
+    #         # 解码子项数据
+    #         from data_annotation_set_item import AnnotationSetItemItemOffData
+    #         item = AnnotationSetItemItemOffData(bytes[off:off + 0x04])
+    #
+    #         # 添加数据列表
+    #         self.item_list.append(item)
+    #
+    #         # 偏移量增加
+    #         off += 0x04
+    #     self.item_size = off - self.offset
         # 重新调整字节数组的大小
-        self.setBytes(bytes[0x00:off])
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """

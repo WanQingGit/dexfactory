@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 
 from base import *
+from common_tool import convertBytesToInt, convertIntToBytes
 
 
 class AnnotationSefRefListItemData(BaseData):
@@ -9,23 +10,12 @@ class AnnotationSefRefListItemData(BaseData):
     """
     item_size = 0x04
 
-
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(AnnotationSefRefListItemData, self).__init__(bytes[0x00:0x04])
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, offset):
         """
         解码字节数组
         """
-        bytes = self.bytes
 
-        self.annotations_off = convertBytesToInt(bytes[0x00:0x04])
+        self.annotations_off = convertBytesToInt(bytes[offset:offset + 0x04])
 
         self.annotations_id = -1
         self.annotations_item = None

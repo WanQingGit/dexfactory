@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from section_base import *
+from base import *
 
 
 class ProtoIdListSection(BaseSection):

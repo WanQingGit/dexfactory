@@ -3,6 +3,9 @@
 from base import *
 import struct
 
+from common_tool import convertIntToBytes, convertShortToBytes, convertUleb128BytesToInt, convertIntToUleb128Bytes, \
+    convertIntToSleb128Bytes, convertSleb128BytesToInt
+
 
 class TryItemData(BaseData):
     """
@@ -11,33 +14,16 @@ class TryItemData(BaseData):
     Struct = struct.Struct('<LHH')
     handler = -1
     handler = -1
-    bytes_size = 0x8
+    item_size = 0x8
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(TryItemData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self, offset=0):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        self.start_addr, self.insn_count, self.handler_off = self.Struct.unpack(bytes[offset:offset + self.bytes_size])
+    def decode(self, bytes, offset=0):
+        self.start_addr, self.insn_count, self.handler_off = self.Struct.unpack(bytes[offset:offset + self.item_size])
 
         # self.start_addr = convertBytesToInt(bytes[0x00:0x04])
         # self.insn_count = convertBytesToShort(bytes[0x04:0x06])
         # self.handler_off = convertBytesToShort(bytes[0x06:0x08])
 
         # self.handler = -1
-
-        # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:0x08])
 
     def encode(self):
         """
@@ -48,22 +34,6 @@ class TryItemData(BaseData):
         bytes[0x00:0x04] = convertIntToBytes(self.start_addr)
         bytes[0x04:0x06] = convertShortToBytes(self.insn_count)
         bytes[0x06:0x08] = convertShortToBytes(self.handler_off)
-
-    def convertOffToId(self, context):
-        """ 转换文件偏移量到相关的id """
-        pass
-
-    def convertIdToOff(self, context):
-        """ 转换id到相关的文件偏移量 """
-        pass
-
-    def convertIdToItem(self, context):
-        """ 转换id到item对象 """
-        pass
-
-    def convertItemToId(self, context):
-        """ 转换item对象到id """
-        pass
 
     def tostring(self):
         """
@@ -83,23 +53,7 @@ class EncodedTypeAddrPairData(BaseData):
     data: encoded_type_addr_pair
     """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedTypeAddrPairData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0
-
+    def decode(self, bytes, off):
         self.type_idx, read_size = convertUleb128BytesToInt(bytes[off:])
         off += read_size
 
@@ -149,26 +103,8 @@ class EncodedTypeAddrPairData(BaseData):
 
 
 class EncodedCatchHandlerData(BaseData):
-    """
-    data: encoded_catch_handler
-    """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedCatchHandlerData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0
+    def decode(self, bytes, off):
 
         self.size, read_size = convertSleb128BytesToInt(bytes[off:])
         off += read_size
@@ -241,26 +177,8 @@ class EncodedCatchHandlerData(BaseData):
 
 
 class EncodedCatchHandlerListData(BaseData):
-    """
-    data: encoded_catch_handler_list
-    """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedCatchHandlerListData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0
+    def decode(self, bytes, off):
 
         self.size, read_size = convertUleb128BytesToInt(bytes[off:])
         off += read_size

@@ -26,11 +26,7 @@ class ClassDefItem(BaseItem):
     static_value_item = None
 
 
-    def decode(self, offset=0):
-        """
-        从字节数组中解析变量
-        """
-        bytes = self.getBytes()
+    def decode(self, bytes,offset=0):
 
         self.class_id, self.access_flags, self.super_class_id, self.interface_off, \
         self.source_file_id, self.annotation_off, self.class_data_off, self.static_value_off \
@@ -45,8 +41,6 @@ class ClassDefItem(BaseItem):
         # self.class_data_off = convertBytesToInt(bytes[0x18:0x1c])
         # self.static_value_off = convertBytesToInt(bytes[0x1c:0x20])
 
-        # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:0x20])
 
     def encode(self):
         """

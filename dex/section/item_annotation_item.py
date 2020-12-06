@@ -20,20 +20,12 @@ class AnnotationItemItem(BaseItem):
     """
     item_size = 0x04
 
+    def decode(self, bytes, off):
 
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.getBytes()
-
-        self.visibility = bytes[0x00]
+        self.visibility = bytes[0x00 + off]
         from data_encoded_value import EncodedAnnotationData
-        self.annotation = EncodedAnnotationData(bytes[0x01:])
-
-        # 重新调整字节数组的大小
-        new_size = 0x01 + self.annotation.getBytesSize()
-        self.setBytes(bytes[0x00:new_size])
+        self.annotation = EncodedAnnotationData()  # bytes[off + 0x01:]
+        self.item_size = 0x01 + self.annotation.decode_bytes(bytes, off + 0x01)
 
     def encode(self):
         """

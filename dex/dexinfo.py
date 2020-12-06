@@ -63,8 +63,8 @@ class DexInfo(object):
         self.convertIdToItemForAllSections()
 
         # 6. 记录头部信息
-        self.header_section = self.context.getSection(TYPE_HEADER_ITEM)
-        self.header = self.header_section.getItem(0)
+        # self.header_section = self.context.getSection(TYPE_HEADER_ITEM)
+        self.header = header  # self.header_section.getItem(0)
 
     def encode(self):
         """

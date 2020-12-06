@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
-
-from section_base import *
+from item_annotation_item import annotation_item_visibility_desc_map, convertBytesToInt
+from base import *
 
 
 class AnnotationItemSection(BaseSection):

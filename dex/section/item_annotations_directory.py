@@ -7,16 +7,9 @@ class AnnotationsDirectoryItem(BaseItem):
     """
     section子结构: annotations_directory_item
     """
-    item_size = 0x4
 
 
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.getBytes()
-
-        off = 0x00
+    def decode(self,bytes,off):
 
         self.class_annotations_off = convertBytesToInt(bytes[off:off + 0x04])
         self.class_annotations_id = -1
@@ -49,9 +42,9 @@ class AnnotationsDirectoryItem(BaseItem):
             item = ParameterAnnotationData(bytes[off:])
             self.parameter_annotations.append(item)
             off += item.getBytesSize()
-
-        # 重新调整字节数组的大小
-        self.setBytes(bytes[0x00:off])
+        self.item_size=off-self.offset
+        # # 重新调整字节数组的大小
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """

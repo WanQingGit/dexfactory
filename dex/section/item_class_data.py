@@ -1,22 +1,16 @@
 # -- coding: utf-8 --
 
 from base import *
+from common_tool import convertUleb128BytesToInt, convertIntToUleb128Bytes, zerosBytes
 
 
 class ClassDataItem(BaseItem):
     """
     section子结构: 类数据
     """
-    item_size = 0x04
+    # item_size = 0x04
 
-
-    def decode(self):
-        """
-        从字节数组中解析变量
-        """
-        bytes = self.getBytes()
-
-        off = 0x00
+    def decode(self, bytes, off):
 
         # 解析尺寸
         self.static_field_size, read_size = convertUleb128BytesToInt(bytes[off:off + 0x05])
@@ -35,31 +29,39 @@ class ClassDataItem(BaseItem):
         self.static_field_list = []
         from data_class_data import ClassDataItemFieldData
         for i in range(self.static_field_size):
-            item = ClassDataItemFieldData(bytes[off:off + 0x0a])
+            item = ClassDataItemFieldData()
+            off += item.decode_bytes(bytes, off)
+            # item = ClassDataItemFieldData(bytes[off:off + 0x0a])
             self.static_field_list.append(item)
-            off += item.getBytesSize()
+            # off += item.getBytesSize()
 
         # 实例属性列表
         self.instance_field_list = []
         for i in range(self.instance_field_size):
-            item = ClassDataItemFieldData(bytes[off:off + 0x0a])
+            item = ClassDataItemFieldData()
+            off += item.decode_bytes(bytes, off)
+            # item = ClassDataItemFieldData(bytes[off:off + 0x0a])
             self.instance_field_list.append(item)
-            off += item.getBytesSize()
+            # off += item.getBytesSize()
 
         # 直接方法列表
         self.direct_method_list = []
         for i in range(self.direct_method_size):
             from data_class_data import ClassDataItemMethodData
-            item = ClassDataItemMethodData(bytes[off:off + 0x0f])
+            # item = ClassDataItemMethodData(bytes[off:off + 0x0f])
+            item = ClassDataItemMethodData()
+            off += item.decode_bytes(bytes, off)
             self.direct_method_list.append(item)
-            off += item.getBytesSize()
+            # off += item.getBytesSize()
 
         # 虚方法列表
         self.virtual_method_list = []
         for i in range(self.virtual_method_size):
-            item = ClassDataItemMethodData(bytes[off:off + 0x0f])
+            item = ClassDataItemMethodData()
+            off += item.decode_bytes(bytes, off)
+            # item = ClassDataItemMethodData(bytes[off:off + 0x0f])
             self.virtual_method_list.append(item)
-            off += item.getBytesSize()
+            # off += item.getBytesSize()
 
         # 根据差值计算真实值
         self.convertDiffToIdForFieldList(self.static_field_list)
@@ -67,8 +69,7 @@ class ClassDataItem(BaseItem):
         self.convertDiffToIdForMethodList(self.direct_method_list)
         self.convertDiffToIdForMethodList(self.virtual_method_list)
 
-        # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:off])
+        self.item_size = off - self.offset
 
     def encode(self):
         """

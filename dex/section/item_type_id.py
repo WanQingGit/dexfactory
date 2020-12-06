@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 
 from base import *
+from common_tool import *
 
 
 class TypeIdItem(BaseItem):
@@ -10,16 +11,15 @@ class TypeIdItem(BaseItem):
     item_size = 0x04
 
 
-    def decode(self):
+    def decode(self,bytes,offset):
         """
         从字节数组中解析变量
         """
-        bytes = self.getBytes()
 
-        self.string_id = convertBytesToInt(bytes[0x00:0x04])
+        self.string_id = convertBytesToInt(bytes[offset:offset+0x04])
 
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:0x04])
+        # self.setBytes(bytes[0x00:0x04])
 
     def encode(self):
         """

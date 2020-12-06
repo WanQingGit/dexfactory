@@ -10,22 +10,10 @@ class TypeListItemData(BaseData):
     """
     item_size = 0x02
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(TypeListItemData, self).__init__(bytes[0x00:0x02])
 
-        self.decode()
+    def decode(self,bytes,off):
 
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        self.type_id = convertBytesToShort(bytes[0x00:0x02])
+        self.type_id = convertBytesToShort(bytes[off:off+0x02])
 
     def encode(self):
         """

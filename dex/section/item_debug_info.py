@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 
 from base import *
+from common_tool import convertUleb128BytesToInt
 
 
 class DebugInfoItem(BaseItem):
@@ -9,14 +10,7 @@ class DebugInfoItem(BaseItem):
     """
     item_size = 0x10
 
-
-    def decode(self):
-        """
-        从字节数组中解析变量
-        """
-        bytes = self.getBytes()
-
-        off = 0x00
+    def decode(self, bytes, off):
 
         self.line_start, read_size = convertUleb128BytesToInt(bytes[off:off + 0x05])
         off += read_size
@@ -40,8 +34,9 @@ class DebugInfoItem(BaseItem):
                 break
             end_index += 1
 
+        self.item_size = off - self.offset
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:off])
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """

@@ -14,17 +14,17 @@ class StringDataItem(BaseItem):
     bytes:  原始字节数组，结构为[size, string, 0]，所以大小为1 + size + 1 = size + 2
     """
 
-    def decode(self):
+    def decode(self, bytes, off):
         """
         从字节数组中解析变量
         """
-        bytes = self.getBytes()
 
-        self.string_size = bytes[0x00]
-        string_data = bytes[0x01:0x01 + self.string_size].tostring()
+        self.string_size = bytes[off]
+        string_data = bytes[off + 0x01:off + 0x01 + self.string_size].tostring()
         self.string_data = string_data.decode('utf-8')
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:self.string_size + 0x02])
+        self.item_size = self.string_size + 2
+        # self.setBytes(bytes[0x00:self.string_size + 0x02])
 
     def encode(self):
         """

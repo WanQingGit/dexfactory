@@ -40,7 +40,7 @@ class HeaderItem(BaseItem):
         self.data_off = convertBytesToInt(bytes[0x6C:0x70])
 
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:0x70])
+        # self.setBytes(bytes[0x00:0x70])
 
     def encode(self):
         """

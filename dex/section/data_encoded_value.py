@@ -36,47 +36,35 @@ encoded_value_class_map = {
 
 
 class EncodedValueData(BaseData):
-    """
-    data: encoded_value
-    """
-    item_size = 0x01
+    value = None
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedValueData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
+    def decode(self, bytes, off):
         # 解析type和arg
-        self.value_type = (bytes[0x00] >> 0) & 0x1f
-        self.value_arg = (bytes[0x00] >> 5) & 0x07
+        self.value_type = (bytes[off] >> 0) & 0x1f
+        self.value_arg = (bytes[off] >> 5) & 0x07
 
-        # 解析value
-        self.value = None
-
+        value = None
+        off += 1
         if self.value_type == ENCODED_VALUE_BYTE:
-            self.value = BytesObject(bytes[0x01])
+            value = BytesObject(bytes, off)
+            # self.value = BytesObject(bytes,off + 0x01)
+            value.setBytes(bytes[off:off + 1])
         elif self.value_type <= ENCODED_VALUE_ENUM:
-            self.value = BytesObject(bytes[0x01:0x01 + (self.value_arg + 0x01)])
+            value = BytesObject(bytes, off)
+            value.setBytes(bytes[off:off + (self.value_arg + 0x01)])
+            # self.value = BytesObject(bytes[off + 0x01:off + 0x01 + (self.value_arg + 0x01)])
         elif self.value_type == ENCODED_VALUE_ARRAY or self.value_type == ENCODED_VALUE_ANNOTATION:
             encoded_value_class = encoded_value_class_map[self.value_type]
             if encoded_value_class:
-                self.value = encoded_value_class(bytes[0x01:])
+                value = encoded_value_class()
+                value.decode_bytes(bytes, off)
+                # self.value = encoded_value_class(bytes[off + 0x01:])
 
-        # 重新调整字节数组大小
         size = 0x01
-        if self.value:
-            size += self.value.getBytesSize()
-        self.setBytes(bytes[0x00:size])
+        if value is not None:
+            size += value.getBytesSize()
+        self.value = value
+        self.item_size = size
 
     def encode(self):
         """
@@ -102,35 +90,20 @@ class EncodedValueData(BaseData):
 
 
 class AnnotationElementData(BaseData):
-    """
-    data: annotation_element
-    """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(AnnotationElementData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, off):
         """
         解码字节数组
         """
-        bytes = self.bytes
 
-        off = 0x00
-
-        self.name_id, read_size = convertUleb128BytesToInt(bytes[off:])
+        self.name_id, read_size = convertUleb128BytesToInt(bytes[off:off + 10])
         off += read_size
 
-        self.value = EncodedValueData(bytes[off:])
-        off += self.value.getBytesSize()
+        self.value = EncodedValueData()
+        off += self.value.decode_bytes(bytes, off)
+        # off += self.value.getBytesSize()
 
-        # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:off])
+        self.item_size = off - self.offset
 
     def encode(self):
         """
@@ -155,22 +128,10 @@ class EncodedAnnotationData(BaseData):
     data: encoded_annotation
     """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedAnnotationData, self).__init__(bytes)
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, off):
         """
         解码字节数组
         """
-        bytes = self.bytes
-
-        off = 0x00
 
         self.type_id, read_size = convertUleb128BytesToInt(bytes[off:])
         off += read_size
@@ -182,12 +143,15 @@ class EncodedAnnotationData(BaseData):
         self.item_list = []
 
         for i in range(self.item_size):
-            item = AnnotationElementData(bytes[off:])
+            # item = AnnotationElementData(bytes[off:])
+            item = AnnotationElementData()
+            off += item.decode_bytes(bytes, off)
             self.item_list.append(item)
-            off += item.getBytesSize()
+            # off += item.getBytesSize()
 
         # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:off])
+        self.item_size = off - self.offset
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """
@@ -219,40 +183,21 @@ class EncodedAnnotationData(BaseData):
 
 
 class EncodedArrayData(BaseData):
-    """
-    data: encoded_annotation
-    """
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(EncodedArrayData, self).__init__(bytes)
+    def decode(self, bytes, off):
 
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0x00
-
-        self.item_size, read_size = convertUleb128BytesToInt(bytes[off:])
+        self.item_size, read_size = convertUleb128BytesToInt(bytes[off:off + 6])
         off += read_size
 
         # 解析子项列表
         self.item_list = []
 
         for i in range(self.item_size):
-            item = EncodedValueData(bytes[off:])
+            item = EncodedValueData()
+            off += item.decode_bytes(bytes, off)
             self.item_list.append(item)
-            off += item.getBytesSize()
 
-        # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:off])
+        self.item_size = off - self.offset
 
     def encode(self):
         """

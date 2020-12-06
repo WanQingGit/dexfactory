@@ -1,6 +1,6 @@
 # -- coding: utf-8 --
 
-from section_base import *
+from base import BaseSection
 
 
 class TypeListSection(BaseSection):
@@ -19,8 +19,8 @@ class TypeListSection(BaseSection):
         """
         super(TypeListSection, self).decode()
 
-        if self.item_size > 0:
-            last_item = self.getItem(self.item_size - 1)
+        if self.item_count > 0:
+            last_item = self.getItem(self.item_count - 1)
 
             if last_item.item_size % 0x02 != 0:
                 bytes = self.getBytes()

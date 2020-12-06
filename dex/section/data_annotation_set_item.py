@@ -12,22 +12,12 @@ class AnnotationSetItemItemOffData(BaseData):
 
     item_size = 0x04
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(AnnotationSetItemItemOffData, self).__init__(bytes[0x00:0x04])
-
-        self.decode()
-
-    def decode(self):
+    def decode(self, bytes, off):
         """
         解码字节数组
         """
-        bytes = self.bytes
 
-        self.annotation_off = convertBytesToInt(bytes[0x00:0x04])
+        self.annotation_off = convertBytesToInt(bytes[off:off + 0x04])
 
         self.annotation_id = -1
         self.annotation_item = None

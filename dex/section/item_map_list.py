@@ -4,33 +4,31 @@ from base import *
 from odex.section.tool import convertIntToBytes, convertBytesToInt
 
 
-class MapListItem(BaseItem):
+class MapListItem(BaseSectionItem):
+    ItemData = MapListItemData
     """
     section子结构: 映射项信息
     """
 
-    # item_size = 0x04
 
-    def decode(self, bytes=None, off=None):
-        """
-        解码字节数组
-        """
-
-        self.item_count = convertBytesToInt(bytes[off:off + 0x04])
-        self.item_list = []
-
-        off += 0x04
-        for i in range(self.item_count):
-            # 解码子项数据
-            item = MapListItemData()  # bytes[off:off + 0x0c]
-            assert item.decode_bytes(bytes, off) == 0xc
-            # 添加数据列表
-            self.item_list.append(item)
-            # 偏移量增加（往前移动12个字节）
-            off += 0x0c
-        self.item_size = off - self.offset
-        # 重新调整字节数组的大小
-        # self.setBytes(bytes[0x00:off])
+    # def decode(self, bytes=None, off=None):
+    #     """
+    #     解码字节数组
+    #     """
+    #
+    #     self.item_count = convertBytesToInt(bytes[off:off + 0x04])
+    #     self.item_list = []
+    #
+    #     off += 0x04
+    #     for i in range(self.item_count):
+    #         # 解码子项数据
+    #         item = MapListItemData()  # bytes[off:off + 0x0c]
+    #         assert item.decode_bytes(bytes, off) == 0xc
+    #         # 添加数据列表
+    #         self.item_list.append(item)
+    #         # 偏移量增加（往前移动12个字节）
+    #         off += 0x0c
+    #     self.item_size = off - self.offset
 
     def encode(self):
         """

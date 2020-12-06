@@ -3,6 +3,8 @@
 from base import *
 import struct
 
+from common_tool import zerosBytes, convertShortToBytes, convertIntToBytes
+
 
 class CodeItem(BaseItem):
     """
@@ -13,11 +15,10 @@ class CodeItem(BaseItem):
     Struct = struct.Struct('<HHHHLL')
 
 
-    def decode(self):
+    def decode(self,bytes,offset):
         """
         从字节数组中解析变量
         """
-        bytes = self.getBytes()
 
         # self.registers_size = convertBytesToShort(bytes[0x00:0x02])
         # self.ins_size = convertBytesToShort(bytes[0x02:0x04])
@@ -26,14 +27,13 @@ class CodeItem(BaseItem):
         # self.debug_info_off = convertBytesToInt(bytes[0x08:0x0c])
         # self.insns_size = convertBytesToInt(bytes[0x0c:0x10])
 
-        offset = 0
         self.registers_size, self.ins_size, self.outs_size, self.tries_size, \
         self.debug_info_off, self.insns_size = self.Struct.unpack(bytes[offset:offset + 0x10])
 
         self.debug_info_id = -1
         self.debug_info_item = None
 
-        off = 0x10
+        off =offset+ 0x10
 
         self.insns = createBytes(self.insns_size * 0x02)
         self.insns[0x00:self.insns_size * 0x02] = bytes[off:off + self.insns_size * 0x02]
@@ -61,7 +61,8 @@ class CodeItem(BaseItem):
             off += 0x04 - (off % 0x04)
 
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:off])
+        self.item_size=off-self.offset
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """

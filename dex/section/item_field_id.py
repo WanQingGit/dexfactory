@@ -10,13 +10,7 @@ class FieldIdItem(BaseItem):
     item_size = 0x08
     Struct = struct.Struct('<HHL')
 
-
-    def decode(self, offset=0):
-        """
-        从字节数组中解析变量
-        """
-        bytes = self.getBytes()
-
+    def decode(self, bytes, offset=0):
         self.class_id, self.type_id, self.name_id = self.Struct.unpack(bytes[offset:offset + 0x08])
 
         # self.class_id = convertBytesToShort(bytes[0x00:0x02])
@@ -24,9 +18,9 @@ class FieldIdItem(BaseItem):
         # self.name_id = convertBytesToInt(bytes[0x04:0x08])
 
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:0x08])
+        # self.setBytes(bytes[0x00:0x08])
 
-    def encode(self, offset=0):
+    def encode(self, bytes, offset=0):
         """
         将变量重新写入到字节数组中
         """

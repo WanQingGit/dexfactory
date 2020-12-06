@@ -1,41 +1,49 @@
 # -- coding: utf-8 --
 
 from base import *
+from data_type_list import TypeListItemData
 
 
-class TypeListItem(BaseItem):
+class TypeListItem(BaseSectionItem):
     """
     section子结构: 类型列表项
     """
     item_size = 0x04
+    ItemData = TypeListItemData
 
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.getBytes()
+    # def decode(self):
+    #     """
+    #     解码字节数组
+    #     """
+    #     bytes = self.getBytes()
+    #
+    #     self.item_size = convertBytesToInt(bytes[0x00:0x04])
+    #     self.item_list = []
+    #
+    #     off = 0x04
+    #     for i in range(self.item_size):
+    #         # 解码子项数据
+    #         from data_type_list import TypeListItemData
+    #         item = TypeListItemData(bytes[off:off + 0x02])
+    #
+    #         # 添加数据列表
+    #         self.item_list.append(item)
+    #
+    #         # 偏移量增加
+    #         off += 0x02
+    #
+    #     # 四字节对齐
+    #     if off % 0x04 != 0:
+    #         off += 0x02
+    #
+    #     # 重新调整字节数组的大小
+    #     self.setBytes(bytes[0x00:off])
 
-        self.item_size = convertBytesToInt(bytes[0x00:0x04])
-        self.item_list = []
-
-        off = 0x04
-        for i in range(self.item_size):
-            # 解码子项数据
-            from data_type_list import TypeListItemData
-            item = TypeListItemData(bytes[off:off + 0x02])
-
-            # 添加数据列表
-            self.item_list.append(item)
-
-            # 偏移量增加
-            off += 0x02
-
-        # 四字节对齐
+    def align_off(self, off):
         if off % 0x04 != 0:
             off += 0x02
-
-        # 重新调整字节数组的大小
-        self.setBytes(bytes[0x00:off])
+            self.align = 2
+        return off
 
     def encode(self):
         """

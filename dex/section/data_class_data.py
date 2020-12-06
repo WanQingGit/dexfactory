@@ -7,25 +7,17 @@ class ClassDataItemFieldData(BaseData):
     """
     类数据中的field结构
     """
-    item_size = 0x02
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(ClassDataItemFieldData, self).__init__(bytes[0x00:0x0a])
+    # def __init__(self, bytes):
+    #     """
+    #     初始化
+    #     bytes:    字节数组
+    #     """
+    #     super(ClassDataItemFieldData, self).__init__(bytes[0x00:0x0a])
+    #
+    #     self.decode()
 
-        self.decode()
-
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0x00
-
+    def decode(self, bytes, off):
         self.field_id_diff, read_size = convertUleb128BytesToInt(bytes[off:off + 0x05])
         off += read_size
 
@@ -34,9 +26,7 @@ class ClassDataItemFieldData(BaseData):
 
         # field_id需要通过field_id_diff还原回来
         self.field_id = 0
-
-        # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:off])
+        self.item_size = off - self.offset
 
     def encode(self):
         """
@@ -109,25 +99,19 @@ class ClassDataItemMethodData(BaseData):
     """
     类数据中的Method结构
     """
-    item_size = 0x03
 
-    def __init__(self, bytes):
-        """
-        初始化
-        bytes:    字节数组
-        """
-        super(ClassDataItemMethodData, self).__init__(bytes[0x00:0x0f])
+    # item_size = 0x03
 
-        self.decode()
+    # def __init__(self, bytes):
+    #     """
+    #     初始化
+    #     bytes:    字节数组
+    #     """
+    #     super(ClassDataItemMethodData, self).__init__(bytes[0x00:0x0f])
+    #
+    #     self.decode()
 
-    def decode(self):
-        """
-        解码字节数组
-        """
-        bytes = self.bytes
-
-        off = 0x00
-
+    def decode(self, bytes, off):
         self.method_id_diff, read_size = convertUleb128BytesToInt(bytes[off:off + 0x05])
         off += read_size
 
@@ -142,8 +126,9 @@ class ClassDataItemMethodData(BaseData):
         self.code_id = -1
         self.code_item = None
 
+        self.item_size = off - self.offset
         # 重新调整字节数组大小
-        self.setBytes(bytes[0x00:off])
+        # self.setBytes(bytes[0x00:off])
 
     def encode(self):
         """

@@ -9,18 +9,14 @@ class EncodedArrayItem(BaseItem):
     """
     item_size = 0x04
 
-
-    def decode(self):
-        """
-        从字节数组中解析变量
-        """
-        bytes = self.getBytes()
-
+    def decode(self, bytes, off):
         from data_encoded_value import EncodedArrayData
-        self.value = EncodedArrayData(bytes)
+        self.value = EncodedArrayData()
+        self.value.decode_bytes(bytes, off)
 
+        self.item_size = self.value.item_size
         # 调整字节数组尺寸
-        self.setBytes(bytes[0x00:self.value.getBytesSize()])
+        # self.setBytes(bytes[0x00:self.value.getBytesSize()])
 
     def encode(self):
         """
